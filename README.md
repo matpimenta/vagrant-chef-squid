@@ -1,12 +1,30 @@
 Description
 ===========
-Configures squid as a caching proxy.
+
+Vagrant and chef files for configuring squid as a caching proxy.
+
+I modified the original recipe so it can cache large static files (.deb, .gz, ...) by default and the cache size is big enough.
+
+It can be started locally in a vagrant box (basic authentication is enabled):
+
+    $ vagrant up
+
+Proxy address: http://squid:squid@10.0.0.10:3128
+
+To check cache usage:
+
+    $ vagrant ssh
+    $ sudo tail -f /var/log/squid3/access.log
+
+Original README:
 
 Recipes
 =======
 default
 -------
-The default recipe installs squid and sets up simple proxy caching. As of now, the options you may change are the port (`node['squid']['port']`) and the network the caching proxy is available on the subnet from `node.ipaddress` (ie. "192.168.1.0/24") but may be overridden with `node['squid']['network']`. The size of objects allowed to be stored has been bumped up to allow for caching of installation files.
+The default recipe installs squid and sets up simple proxy caching. 
+As of now, the options you may change are the port (`node['squid']['port']`) and the network the caching proxy is available on the subnet from `node.ipaddress` (ie. "192.168.1.0/24") but may be overridden with `node['squid']['network']`. 
+The size of objects allowed to be stored has been bumped up to allow for caching of installation files.
 
 Usage
 =====

@@ -30,12 +30,25 @@ default['squid']['config_dir'] = "/etc/squid"
 default['squid']['config_file'] = "/etc/squid/squid.conf"
 default['squid']['log_dir'] = "/var/log/squid"
 default['squid']['cache_dir'] = "/var/spool/squid"
+default['squid']['cache_size'] = 10000 # MB
+default['squid']['maximum_object_size'] = "1024 MB"
 default['squid']['coredump_dir'] = "/var/spool/squid"
 default['squid']['service_name'] = "squid"
 
 default['squid']['listen_interface'] = "eth0"
 default['squid']['cache_mem'] = "2048"
 
+default['squid']['cache_file_patterns'] = [
+  '\.deb$',
+  '\.rpm$',
+  '\.iso$',
+  '\.gz$',
+  '\.zip$',
+  '\.bz2$',
+  '\.hpi$',
+  ]
+default['squid']['authentication'] = nil
+  
 case platform_family
   
 when "debian"

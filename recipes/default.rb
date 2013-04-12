@@ -23,7 +23,7 @@
 ipaddress = node['ipaddress']
 listen_interface = node['squid']['listen_interface']
 version = node['squid']['version']
-netmask = node['network']['interfaces']["#{listen_interface}"]['addresses']["#{ipaddress}"]['netmask']
+#netmask = node['network']['interfaces']["#{listen_interface}"]['addresses']["#{ipaddress}"]['netmask']
 
 # squid/libraries/default.rb
 acls = squid_load_acls
@@ -33,7 +33,7 @@ url_acl = squid_load_url_acl
 # Log variables to Chef::Log::debug()
 Chef::Log.debug("Squid listen_interface: #{listen_interface}")
 Chef::Log.debug("Squid ipaddress: #{ipaddress}")
-Chef::Log.debug("Squid netmask: #{netmask}")
+#Chef::Log.debug("Squid netmask: #{netmask}")
 Chef::Log.debug("Squid version: #{version}")
 Chef::Log.debug("Squid host_acls: #{host_acl}")
 Chef::Log.debug("Squid url_acls: #{url_acl}")
@@ -81,6 +81,14 @@ template node['squid']['config_file'] do
     :acls => acls
     )
 end
+
+# squid user config (default: squid/squid)
+cookbook_file "#{node['squid']['config_dir']}/user" do
+  source "user"
+  mode 00644
+  notifies :restart, "service[#{node['squid']['service_name']}]"
+end
+
 
 # services
 service node['squid']['service_name'] do

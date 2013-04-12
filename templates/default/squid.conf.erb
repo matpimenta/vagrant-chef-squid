@@ -27,6 +27,20 @@ acl Safe_ports port 901		# SWAT
 acl purge method PURGE
 acl CONNECT method CONNECT
 
+
+# authentication = <%= node['squid']['authentication'] %>
+<% if node['squid']['authentication'] == 'basic' %>
+auth_param basic children 5
+auth_param basic realm Linux Class
+auth_param basic program /usr/lib/squid3/ncsa_auth /etc/squid3/user
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive off
+
+acl authenticated proxy_auth REQUIRED
+http_access allow authenticated
+<% end %>
+
+
 # Managed with Chef
 <% @host_acl.each do |host| %>
 acl <%= host[0] %> <%= host[1] %> <%= host[2] %>
@@ -63,9 +77,23 @@ refresh_pattern     (Release|Package(.gz)*)$	0	20%	2880
 # refresh_pattern	    \.iso$			1440    20%	10080
 # refresh_pattern	    \.$			1440    20%	10080
 # refresh_pattern	    .				0	20%	4320
+
+# Managed with Chef
+<% node['squid']['cache_file_patterns'].each do |pattern| %>
+refresh_pattern <%= pattern %> 129600 100% 129600
+<% end %>
+
+refresh_pattern .              0       20%     4320
+
 hosts_file /etc/hosts
-cache_dir ufs <%= node['squid']['cache_dir'] %> 100 16 256
+#cache_dir ufs <%= node['squid']['cache_dir'] %> 100 16 256
+cache_dir ufs <%= node['squid']['cache_dir'] %> <%= node['squid']['cache_size'] %> 16 256
+
 coredump_dir <%= node['squid']['coredump_dir'] %>
-refresh_pattern deb$ 1577846 100% 1577846
-maximum_object_size 1024 MB
+#refresh_pattern deb$ 1577846 100% 1577846
+#maximum_object_size 1024 MB
+maximum_object_size <%= node['squid']['maximum_object_size'] %>
 cache_mem <%= node['squid']['cache_mem'] %> MB
+
+# cache_replacement_policy lru
+cache_replacement_policy heap LFUDA
