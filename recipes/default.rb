@@ -59,6 +59,14 @@ directory node['squid']['config_dir'] do
   mode 00755
 end
 
+# squid config dir
+directory node['squid']['cache_dir'] do
+  action :create
+  recursive true
+  owner "proxy"
+  mode 00755
+end
+
 # squid mime config
 cookbook_file "#{node['squid']['config_dir']}/mime.conf" do
   source "mime.conf"

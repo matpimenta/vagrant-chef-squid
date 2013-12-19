@@ -46,6 +46,12 @@ default['squid']['cache_file_patterns'] = [
   '\.zip$',
   '\.bz2$',
   '\.hpi$',
+  '\.jar$',
+  '\.xml$',
+  '\.pom$',
+  '\.sha1$',
+  '\.sh$',
+  '\.txt$'
   ]
 default['squid']['authentication'] = nil
   
